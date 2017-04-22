@@ -19,7 +19,7 @@ function MainScene:ctor()
     	:onButtonClicked(function ()
     		-- body
     		printf("start")
-
+    		app:enterScene("GameScene", nil, "SLIDEINT", 1.0)
     	end)
     	:pos(display.cx/2, display.cy)
     	:addTo(self)
