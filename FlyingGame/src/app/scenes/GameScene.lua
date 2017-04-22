@@ -4,7 +4,8 @@ local GameScene = class("GameScene", function (  )
 end)
 
 function GameScene:ctor()
-
+	local backgroundLayer = BackgroundLayer.new()
+        :addTo(self)
 end
 
 function GameScene:onEnter()
