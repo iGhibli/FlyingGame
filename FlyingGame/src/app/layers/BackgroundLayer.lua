@@ -27,10 +27,14 @@ function BackgroundLayer:createBackgrounds()
 
 	local bg2 = display.newSprite("image/b2.png")
 		:align(display.BOTTOM_LEFT, display.left + bg1:getContentSize().width, display.bottom + 10)
-		:addTo(self, -2)
+		:addTo(self, -3)
 
 		table.insert(self.distanceBg, bg1)
 		table.insert(self.distanceBg, bg2)
+
+	self.map = cc.TMXTiledMap:create("image/map.tmx")
+		:align(display.BOTTOM_LEFT, display.left, display.bottom)
+		:addTo(self, -1)
 
 end
 
@@ -46,6 +50,13 @@ function BackgroundLayer:scrollBackgrounds(dt)
 	self.distanceBg[1]:setPositionX(x1)
 	self.distanceBg[2]:setPositionX(x2)
 
+	if self.map:getPositionX() <= display.width - self.map:getContentSize().width then
+		-- 禁用帧事件，停止整个背景层滚动
+		self:unscheduleUpdate()
+	end
+
+	local x5 = self.map:getPositionX() - 130*dt
+	self.map:setPositionX(x5)
 
 end
 
