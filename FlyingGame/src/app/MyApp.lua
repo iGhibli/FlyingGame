@@ -1,7 +1,7 @@
-
 require("config")
 require("cocos.init")
 require("framework.init")
+require("app.layers.BackgroundLayer")
 
 local MyApp = class("MyApp", cc.mvc.AppBase)
 

@@ -31,10 +31,6 @@ function BackgroundLayer:createBackgrounds()
 
 		table.insert(self.distanceBg, bg1)
 		table.insert(self.distanceBg, bg2)
-	-- 添加TMX层
-	self.map = cc.TMXTiledMap:create("image/map.tmx")
-		:align(display.BOTTOM_LEFT, display.left, display.bottom)
-		:addTo(self, -1)
 
 end
 
@@ -50,13 +46,6 @@ function BackgroundLayer:scrollBackgrounds(dt)
 	self.distanceBg[1]:setPositionX(x1)
 	self.distanceBg[2]:setPositionX(x2)
 
-	-- 让地图层滚动
-	if self.map:getPositionX() <= display.width - self.map:getContentSize().width then
-		-- 停止滚动
-		self:unscheduleUpdate()
-	end
-	local x5 = self.map:getPositionX() - 130*dt
-	self.map:setPositionX(x5)
 
 end
 
