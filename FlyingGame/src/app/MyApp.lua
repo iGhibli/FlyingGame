@@ -13,6 +13,7 @@ end
 function MyApp:run()
     cc.FileUtils:getInstance():addSearchPath("res/")
     display.addSpriteFrames("image/player.plist", "image/player.pvr.ccz")
+
     self:enterScene("MainScene")
 end
 

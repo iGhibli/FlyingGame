@@ -1,3 +1,5 @@
+local Heart = require("app.objects.Heart")
+
 BackgroundLayer = class("BackgroundLayer",function()
 	return display.newLayer()
 end)
@@ -36,6 +38,7 @@ function BackgroundLayer:createBackgrounds()
 		:align(display.BOTTOM_LEFT, display.left, display.bottom)
 		:addTo(self, -1)
 
+	self:addHeart()
 end
 
 function BackgroundLayer:scrollBackgrounds(dt)
@@ -63,6 +66,36 @@ end
 function BackgroundLayer:startGame()
 	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, handler(self, self.scrollBackgrounds))
 	self:scheduleUpdate()
+end
+
+function BackgroundLayer:addHeart()
+	--[[ 1, getObjectGroup 方法从地图中获取到指定的对象层（也就是个 ObjectGroup 对象组对象），
+			对象组 ObjectGroup 中包含了多个对象，所以我们可以通过 getObjects 方法从 ObjectGroup 中获得所有的对象。
+			objects 在这里就相当于一个存放了多个对象的数组。
+	]]
+	local objects = self.map:getObjectGroup("heart"):getObjects()
+	-- 2, dict 是个临时变量，用它来存储单个的对象；table.getn 方法能得到数组的长度。
+	local dict = nil
+	local i = 0
+	local len = table.getn(objects)
+	-- 3, 遍历 objects 数组。
+	for i = 0, len - 1, 1 do
+		dict = objects[i + 1]
+		-- 4, 如果对象 dict 为空，则跳出 for 循环。
+		if dict == nil then
+			break
+		end
+		--[[ 5, 取出相应的属性值，即对象坐标。因为对象组中的对象在 TMX 文件中是以键值对的形式存在的，
+				所以我们可以通过它的 key 得到相应的 value。
+		]]
+		local key = "x"
+		local x = dict["x"]
+		key = "y"
+		local y = dict["y"]
+		-- 6, 在获取到的坐标上创建 Heart 对象，并把它添加到 TiledMap 背景层上。这样创建的心心才能跟随着背景层的滚动而滚动。
+		local coinSprite1 = Heart.new(x, y)
+		self.map:addChild(coinSprite1)
+	end
 end
 
 function BackgroundLayer:onEnter()

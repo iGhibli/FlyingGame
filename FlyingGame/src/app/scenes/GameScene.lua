@@ -18,8 +18,10 @@ function GameScene:ctor()
 	-- setDebugDrawMask 方法是在调试物理世界时使用的，该方法可以开启调试模
 	-- 能把物理世界中不可见的body，shape，joint等元素可视化。当调试结束时，需要把该功能关闭。
 	self.world:setDebugDrawMask(cc.PhysicsWorld.DEBUGDRAW_ALL)
+
 	local backgroundLayer = BackgroundLayer.new()
 		:addTo(self)
+
 	-- 创建Player对象
 	self.player = Player.new()
 	-- 设置初始显示位置
@@ -30,11 +32,6 @@ function GameScene:ctor()
 	self:playerFlyToScene()
 end
 
-function startGame()
-	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, handler(self, self.scrollBackgrounds))
-	self:scheduleUpdate()
-end
-
 function GameScene:playerFlyToScene()
 
 	local function startDrop()
@@ -42,6 +39,7 @@ function GameScene:playerFlyToScene()
 		self.player:drop()
 		self.backgroundLayer:startGame()
 	end
+
 	-- 从动画缓存中取出需要动画
 	local animation = display.getAnimationCache("flying")
 	-- 使self.player不停的播放这个动画
