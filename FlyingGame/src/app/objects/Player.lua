@@ -23,7 +23,7 @@ function Player:ctor( )
 
 		body是有很多属性的，当我们有需要时，再调用对应的方法。
 	]]
-	local body = cc.PhysicsBody:creatBox(self:getContentSize()), cc.PHYSICSBODY_MATERIAL_DEFAULT, cc.p(0, 0)
+	local body = cc.PhysicsBody:createBox(self:getContentSize(), cc.PHYSICSBODY_MATERIAL_DEFAULT, cc.p(0, 0))
 	self:setPhysicsBody(body)
 end
 
