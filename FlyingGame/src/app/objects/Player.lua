@@ -7,6 +7,8 @@ local Player = class("Player", function ()
 end)
 
 function Player:ctor( )
+
+	self:addAnimationCache()
 	-- 调用cc.PhysicsBody::createBox()方法创建了一个矩形的 body
 	--[[
 		createBox 方法有三个参数，分别是：
@@ -25,6 +27,7 @@ function Player:ctor( )
 	]]
 	local body = cc.PhysicsBody:createBox(self:getContentSize(), cc.PHYSICSBODY_MATERIAL_DEFAULT, cc.p(0, 0))
 	self:setPhysicsBody(body)
+	self:getPhysicsBody():setGravityEnable(false)
 end
 
 function Player:addAnimationCache()
@@ -32,7 +35,7 @@ function Player:addAnimationCache()
 	local animations = {"flying", "drop", "die"}
 	local animationFrameNum = {4, 3, 4}
 
-	for i=1,#animations do
+	for i = 1, #animations do
 		--[[ 1, 创建一个包含animations[i]1.png到animations[i]animationFrameNum[i].png的图像帧对象的数组，
 				如i ＝ 1，就是创建一个包含flying1.png到flying4.png的图像帧对象的数组。
 				其中..是字符串连接操作符，它可以用来连接两个字符串。当其中一个为其它类型时，它会把该类型也转为字符串。

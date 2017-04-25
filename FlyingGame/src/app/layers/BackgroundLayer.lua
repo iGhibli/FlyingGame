@@ -60,6 +60,11 @@ function BackgroundLayer:scrollBackgrounds(dt)
 
 end
 
+function BackgroundLayer:startGame()
+	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, handler(self, self.scrollBackgrounds))
+	self:scheduleUpdate()
+end
+
 function BackgroundLayer:onEnter()
 
 end
