@@ -14,6 +14,31 @@ function BackgroundLayer:ctor()
 
 	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, handler(self, self.scrollBackgrounds))
 	self:scheduleUpdate()
+
+	-- 创建两根和 TiledMap 背景一样长的边界线。
+	local width = self.map:getContentSize().width
+	local height1 = self.map:getContentSize().height * 9 / 10
+	local height2 = self.map:getContentSize().height * 3 / 16
+
+	--[[
+		createEdgeSegment 方法能创建一个不受重力约束的自由线条，它有四个参数，分别表示：
+			参数1为 cc.p 类型，表示线条的起点；
+			参数2也为 cc.p 类型，表示线条的终点；
+			参数3为 cc.PhysicsMaterial 类型，表示物理材质的属性，默认情况下为 cc.PHYSICSBODY_MATERIAL_DEFAULT；
+			参数4为 number 类型，表示线条粗细。
+		与之类似的函数还有：createEdgeBox，createEdgePolygon，createEdgeChain。
+		它们都能创建不受重力约束的边界。具体的参数可跳转到它们的定义查看，这里我就不多说了。
+	]]
+	local sky = display.newNode()
+	local bodyTop = cc.PhysicsBody:createEdgeSegment(cc.p(0, height1), cc.p(width, height1))
+	sky:setPhysicsBody(bodyTop)
+	self:addChild(sky)
+
+	local ground = display.newNode()
+	local bodyBottom = cc.PhysicsBody:createEdgeSegment(cc.p(0, height2), cc.p(width, height2))
+	ground:setPhysicsBody(bodyBottom)
+	self:addChild(ground)
+
 end
 
 function BackgroundLayer:createBackgrounds()
