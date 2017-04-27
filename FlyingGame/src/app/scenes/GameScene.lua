@@ -17,7 +17,7 @@ function GameScene:ctor()
 	self.world:setGravity(cc.p(0, -98.0))
 	-- setDebugDrawMask 方法是在调试物理世界时使用的，该方法可以开启调试模
 	-- 能把物理世界中不可见的body，shape，joint等元素可视化。当调试结束时，需要把该功能关闭。
-	self.world:setDebugDrawMask(cc.PhysicsWorld.DEBUGDRAW_ALL)
+	-- self.world:setDebugDrawMask(cc.PhysicsWorld.DEBUGDRAW_ALL)
 
 	local backgroundLayer = BackgroundLayer.new()
 		:addTo(self)
