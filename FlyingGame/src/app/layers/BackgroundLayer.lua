@@ -11,6 +11,8 @@ function BackgroundLayer:ctor()
 	self.distanceBg = {}
 	self.nearbyBg = {}
 	self.titleMapBg = {}
+	-- 定义一个table数组来存放游戏中所有的鸟
+	self.bird = {}
 
 	self:createBackgrounds()
 
@@ -89,7 +91,9 @@ function BackgroundLayer:scrollBackgrounds(dt)
 
 	local x5 = self.map:getPositionX() - 130*dt
 	self.map:setPositionX(x5)
-
+	-- 因为我们需要不停的遍历 self.bird 数组、不停的检测是否给小鸟加上速度，所以我们需要在刷新屏幕时调用以上的 addVelocityToBird() 函数。
+	-- 那就偷个懒，直接在 scrollBackgrounds(dt) 函数的最后面调用。
+	self:addVelocityToBird()
 end
 
 function BackgroundLayer:startGame()
@@ -97,16 +101,17 @@ function BackgroundLayer:startGame()
 	self:scheduleUpdate()
 end
 
-function BackgroundLayer:addBody(objectGrounpName, class)
+function BackgroundLayer:addBody(objectGroupName, class)
 	--[[ 1, getObjectGroup 方法从地图中获取到指定的对象层（也就是个 ObjectGroup 对象组对象），
 			对象组 ObjectGroup 中包含了多个对象，所以我们可以通过 getObjects 方法从 ObjectGroup 中获得所有的对象。
 			objects 在这里就相当于一个存放了多个对象的数组。
 	]]
-	local objects = self.map:getObjectGroup(objectGrounpName):getObjects()
+	local objects = self.map:getObjectGroup(objectGroupName):getObjects()
 	-- 2, dict 是个临时变量，用它来存储单个的对象；table.getn 方法能得到数组的长度。
 	local dict = nil
 	local i = 0
 	local len = table.getn(objects)
+	print("addBody-len: " .. len)
 	-- 3, 遍历 objects 数组。
 	for i = 0, len -1, 1 do
 		dict = objects[i + 1]
@@ -124,6 +129,45 @@ function BackgroundLayer:addBody(objectGrounpName, class)
 		-- 6, 在获取到的坐标上创建 Heart 对象，并把它添加到 TiledMap 背景层上。这样创建的心心才能跟随着背景层的滚动而滚动。
 		local sprite = class.new(x, y)
 		self.map:addChild(sprite)
+		-- 把所有的鸟都添加到定义的 self.bird 数组中
+		print("objectGroupName: " .. objectGroupName)
+		if objectGroupName == "bird" then
+			table.insert(self.bird, sprite)
+		end
+	end
+end
+
+--[[
+	总的来讲，addVelocityToBird 函数的目的就是在小鸟进入屏幕时给它一个速度，让它朝着游戏角色冲过来。
+	遍历 self.bird 数组中的所有 Bird 对象，当检测到某个 Bird 对象刚好要进入屏幕，且还没给过它任何速度时，
+	我们会给它一个向左的速度，这个速度的范围从(-70, -40)到(-70, 40)。
+	通俗一点就是说： Bird 对象将在横坐标上有一个大小为70，方向向左的速度；在纵坐标上有一个大小在(-40, 40)之间，方向不定的速度。
+]]
+function BackgroundLayer:addVelocityToBird()
+	-- print("BackgroundLayer:addVelocityToBird")
+	local dict = nil
+	local i = 0
+	local len = table.getn(self.bird)
+	-- print("len" .. len)
+	for i = 0, len - 1, 1 do
+		dict = self.bird[i + 1]
+		if dict == nil then
+			break
+		end
+
+		local x = dict:getPositionX()
+		-- print("x: " .. x)
+		if x <= display.width - self.map:getPositionX() then
+			-- print("x1: " .. x)
+			if dict:getPhysicsBody():getVelocity().x == 0 then
+				dict:getPhysicsBody():setVelocity(cc.p(-70, math.random(-40, 40)))
+			else
+				-- print("x2: " .. x)
+				-- 当已经给过某些 Bird 对象速度时，我们要把该对象从 self.bird 数组中移除，这样可以减短遍历数组的时间。
+				-- table.remove(table, pos)函数将删除并返回 table 数组中位于 pos 位置上的元素。
+				table.remove(self.bird, i + 1)
+			end
+		end
 	end
 end
 

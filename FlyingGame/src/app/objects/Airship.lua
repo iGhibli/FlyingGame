@@ -6,6 +6,7 @@ local Airship = class("Airship", function()
 	return display.newSprite("#airship.png")
 end)
 
+-- 这里我们在创建刚体时把它的密度，反弹力、摩擦力都设为0是为了在碰撞的时候不发生任何物理形变。
 local MATERIAL_DEFAULT = cc.PhysicsMaterial(0.0, 0.0, 0.0)
 
 function Airship:ctor(x, y)
